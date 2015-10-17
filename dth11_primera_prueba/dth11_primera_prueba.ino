@@ -1,27 +1,37 @@
-
-#include "DHT.h" //cargamos la librería DHT
-#include <LiquidCrystal.h>
-#include <Servo.h> 
+#include "DHT.h"            //cargamos la librería DHT
+#include <LiquidCrystal.h>  //libreria pantalla
+#include <Servo.h>          // libreria servo
+#include <EEPROM.h>         //libreria memoria interna atmel
 
 //PANTALLA LCD
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 //SERVO
-Servo myservo;  // create servo object to control a servo 
-                // twelve servo objects can be created on most boards
- int pos = 0;    // variable to store the servo position 
+Servo myservo;              // create servo object to control a servo 
+                            // twelve servo objects can be created on most boards
+ int pos = 0;               // variable to store the servo position 
 
 //SENSOR DE TEMPERATURA
-#define DHTPIN 13 //Seleccionamos el pin en el que se //conectará el sensor
-#define DHTTYPE DHT11 //Se selecciona el DHT11 (hay //otros DHT)
-DHT dht(DHTPIN, DHTTYPE); //Se inicia una variable que será usada por Arduino para comunicarse con el sensor
+#define DHTPIN 13           //Seleccionamos el pin en el que se //conectará el sensor
+#define DHTTYPE DHT11       //Se selecciona el DHT11 (hay //otros DHT)
+DHT dht(DHTPIN, DHTTYPE);   //Se inicia una variable que será usada por Arduino para comunicarse con el sensor
 
+//MEMORIA EEPROM
+int Direccion = 0;          //Se crea una variable con el valor de la posición de memoria en la que se va a almacenar el byte.
+
+byte Val1;                  //Se crean una variables para leer los valores de la memoria EEPROM
+byte Val2;
+
+
+//*************************************** CONFIGURACION ***************************************************************************************
 void setup() {
 
+   //CONFIGURACION PUERTO SERIE 
+   Serial.begin(9600);      //Se inicia la comunicación serial 
+   
    //CONFIGURACION SENSOR HUMEDAD 
-   Serial.begin(9600); //Se inicia la comunicación serial 
-   dht.begin(); //Se inicia el sensor
+   dht.begin();             //Se inicia el sensor
 
   //CONFIGURACION LCD
   // set up the LCD's number of columns and rows:
@@ -32,9 +42,14 @@ void setup() {
   //CONFIGURACION SERVO
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
 }
+//***************************************//BUCLE PRINCIPAL//**************************************************************************************************************************
 void loop() {
-float h = dht.readHumidity(); //Se lee la humedad
-float t = dht.readTemperature(); //Se lee la temperatura
+
+//***************************************VARIABLES Y MATEMATICA************************************************************************************
+
+float h = dht.readHumidity();           //Se lee la humedad
+float t = dht.readTemperature();        //Se lee la temperatura
+float t2=0;                             //  LA TEMPERATURA 2 YA SEA CALCULADA O MEDIDA DE ALGUN SENSOR               <--------- //¡CAMBIAR!//
 
 // read the input on analog pin 0:
   int sensorValue = analogRead(A0);
@@ -44,7 +59,7 @@ float t = dht.readTemperature(); //Se lee la temperatura
 
 
 
-//Se imprimen las variables
+//*************************************PANTALLA***Se imprimen las variables***************************************************************************
 lcd.setCursor(0, 0);
 lcd.print("humedad=");
 lcd.setCursor(0,1);
@@ -59,7 +74,7 @@ lcd.print("Temperatura: ");
 lcd.setCursor(0,1);
 lcd.print(t);
 //Serial.println(t);
-delay(2000); //Se espera 2 segundos para seguir leyendo //datos
+delay(2000);                  //Se espera 2 segundos para seguir leyendo //datos
 lcd.clear();
 
 lcd.setCursor(0, 0);
@@ -71,7 +86,7 @@ lcd.clear();
 
 
 /*
-//SERVO - HAY QUE DEFINIR LA CONDICION QUE HACE QUE BAJE Y QUE SUBA EL SENSOR
+//****************************SERVO*** hay que definir condiciones para bajar o subir el servo*******************************************************
 while(condicion){
   delay(1000);
   
@@ -90,6 +105,23 @@ while(condicion2){
   } 
                  }
                  */
+
+//*************************************************GUARDA LOS DATOS*************************************************************************************
+
+
+EEPROM.write(Direccion, (byte) h);   //casteo cada variable para que solo ocupen un byte
+Direccion+1;                         //avanzo un lugar en la posicion de memoria
+EEPROM.write(Direccion,(byte) t);
+Direccion+1;
+EEPROM.write(Direccion,(byte) sensorValue);
+Direccion+1;
+EEPROM.write(Direccion,(byte)t2);                                 
+Direccion+1;  //avanzo un lugar en la posicion de memoria para la proxima vuelta;
+
+
+
+// *****************************************************************************FIN BUCLE PRINCIPAL*********************************************************************************
+
 
 }
 
