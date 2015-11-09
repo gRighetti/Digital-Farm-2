@@ -22,6 +22,12 @@ DHT dht(DHTPIN, DHTTYPE);   //Se inicia una variable que será usada por Arduino
 //MEMORIA EEPROM
 int direccion = 0;          //Se crea una variable con el valor de la posición de memoria en la que se va a almacenar el byte.
 
+//PULSADORES
+const int BotonComienzoPin = 22; //Pin al que esta conectado el boton de comienzo de ciclo
+const int BotonTransmisionPin = 23; //Pin al que esta conectado el boton de comienzo de transmicion
+
+int EstadoBotonComienzo = 0;    //varialbes usadas para la lectura del pulsador
+int EstadoBotonTransmision = 0;
 
 
 //*************************************** CONFIGURACION ***************************************************************************************
@@ -41,6 +47,12 @@ void setup() {
 
   //CONFIGURACION SERVO
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+
+  //CONFIGURACION DE PULSADORES
+  pinMode(BotonComienzoPin, INPUT);   //configuramos los pulsadores como entrada, 5v-->pulsador-->pinEntrada-->Resis(10k)-->0v (Pull-Down)
+  pinMode(BotonTransmisionPin,INPUT);
+
+  
 }
 //***************************************//VARIABLES//**************************************************************************************************************************
 float humedad1;           //Se lee la humedad
@@ -54,7 +66,12 @@ int boton;
 //***************************************//BUCLE PRINCIPAL//**********************************************************************************************************
 
 void loop() {
-  
+ 
+ EstadoBotonComienzo = digitalRead(BotonComienzoPin);        //Guardo el estado del pulsador 
+ EstadoBotonTransmision = digitalRead(BotonTransmisionPin);  //
+ 
+
+if(EstadoBotonComienzo==1){
   
   serialEvent();
  
@@ -99,7 +116,7 @@ void loop() {
   
 
 }
-
+}
 void serialEvent() {
   while (Serial.available()) {
   
