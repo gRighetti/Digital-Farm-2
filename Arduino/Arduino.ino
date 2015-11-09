@@ -26,9 +26,6 @@ int direccion = 0;          //Se crea una variable con el valor de la posición 
 const int BotonComienzoPin = 22; //Pin al que esta conectado el boton de comienzo de ciclo
 const int BotonTransmisionPin = 23; //Pin al que esta conectado el boton de comienzo de transmicion
 
-int EstadoBotonComienzo = 0;    //varialbes usadas para la lectura del pulsador
-int EstadoBotonTransmision = 0;
-
 
 //*************************************** CONFIGURACION ***************************************************************************************
 void setup() {
@@ -48,11 +45,11 @@ void setup() {
   //CONFIGURACION SERVO
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
 
-  //CONFIGURACION DE PULSADORES
+//CONFIGURACION DE PULSADORES
   pinMode(BotonComienzoPin, INPUT);   //configuramos los pulsadores como entrada, 5v-->pulsador-->pinEntrada-->Resis(10k)-->0v (Pull-Down)
   pinMode(BotonTransmisionPin,INPUT);
 
-  
+
 }
 //***************************************//VARIABLES//**************************************************************************************************************************
 float humedad1;           //Se lee la humedad
@@ -63,21 +60,17 @@ float humedad2;
 int contadorCycle=0;
 byte valorEEPROM;
 int boton;
+boolean flagCycle=false;
+boolean flagSerie=false;
+int estadoBotonCycle;
+int estadoBotonSerie;
 //***************************************//BUCLE PRINCIPAL//**********************************************************************************************************
 
 void loop() {
- 
- EstadoBotonComienzo = digitalRead(BotonComienzoPin);        //Guardo el estado del pulsador 
- EstadoBotonTransmision = digitalRead(BotonTransmisionPin);  //
- 
-
-if(EstadoBotonComienzo==1){
   
-  serialEvent();
- 
- 
- if(boton== 49){
-  Serial.println("Start Cycle");
+  
+botonCycle();
+if(flagCycle==true){
  
 
   for(int i=0;i<5;i++){
@@ -101,32 +94,25 @@ if(EstadoBotonComienzo==1){
   
   }
   contadorCycle=0;
-  boton=0;
+ 
   Serial.println("Finish cycle");
+  flagCycle=false;
  }
  
- if(boton == 57){
+ botonSerie();
+ if(flagSerie==true){
    Serial.println("Start Serie");
   txSerie();
   direccion=0;
   
-  boton=0;
+  
   Serial.println("Finish Serie");
+ flagSerie=false;
  }
   
 
 }
-}
-void serialEvent() {
-  while (Serial.available()) {
-  
-   boton = (int)Serial.read();
-   
-    
-    Serial.print("boton: ");
-    Serial.println(boton);
-  }
-}
+
 
 
 
