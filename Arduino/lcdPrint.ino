@@ -3,10 +3,10 @@
 void lcdPrint(){
 
 //*************************************PANTALLA***Se imprimen las variables***************************************************************************
-lcd.clear();
-lcd.setCursor(0, 0);
-lcd.print("humidity 1:");
-lcd.setCursor(0,1);
+lcd.clear();                                      // borra el contenido de la pantalla
+lcd.setCursor(0, 0);                               // acomoda los cursores al inicion 
+lcd.print("humidity 1:");                          // imprime la variable
+lcd.setCursor(0,1);                                  // imprime el valor de dicha variable
 lcd.print(humedad1);
 
 delay (2000);
@@ -29,12 +29,12 @@ delay(2000);
 lcd.clear();
 
 
-lcd.setCursor(0, 0);
-lcd.print("Temperature 2: ");
-lcd.setCursor(0,1);
-lcd.print(temperatura2);
-delay (2000);
-lcd.clear();
+//lcd.setCursor(0, 0);
+//lcd.print("Temperature 2: ");
+//lcd.setCursor(0,1);
+//lcd.print(temperatura2);
+//delay (2000);
+//lcd.clear();
 lcd.print("Digital farm 2");
 
 

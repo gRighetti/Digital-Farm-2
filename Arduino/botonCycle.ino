@@ -1,8 +1,10 @@
 
 boolean botonCycle(){
-estadoBotonCycle = digitalRead(BotonComienzoPin);
+ 
+estadoBotonCycle = digitalRead(BotonComienzoPin);                      // se comprueba el estado del pin 
 
-if(estadoBotonCycle==HIGH){
+if(estadoBotonCycle==HIGH){                                            // si esta en alto esta activado 
+   // se configuran las banderas 
     if(flagCycle==true){
         flagCycle=false;
       }else{
