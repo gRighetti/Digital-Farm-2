@@ -10,7 +10,7 @@ if(flagEncoders==true){
 
 }else{
 encoderRight=encRight.read();                             // se lee la cuenta de los encoders para poder determina la distancia recorrida por cada uno
-encoderLeft=encLeft.read();                              // ademas se utiliza dicha cuanta para la direccion   
+encoderLeft=encLeft.read();                               // ademas se utiliza dicha cuanta para la direccion   
 
 }
 
@@ -20,7 +20,7 @@ encoderLeft=encLeft.read();                              // ademas se utiliza di
 distanciaEncoders=encoderRight*9.5/50; //Falta completar medir en 10 cm cuantas cuentas hace el encoders 
 Serial.print("disstancia Encoders: ");
 Serial.println(distanciaEncoders);
-
-
+Serial.println(encoderRight);
+Serial.println(encoderLeft);
 
 }

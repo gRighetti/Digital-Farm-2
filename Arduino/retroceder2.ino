@@ -1,18 +1,18 @@
 void retroceder2(){
   //Preparamos la salida para que el motor 1 gire en un sentido derecho
-  digitalWrite (IN1, LOW);
-  digitalWrite (IN2, HIGH);
+  digitalWrite (IN1, HIGH);
+  digitalWrite (IN2, LOW );
   
   //Preparamos la salida para que el motor 2 gire en un sentido izquierdo
-  digitalWrite (IN3, HIGH);
-  digitalWrite (IN4, LOW);
+  digitalWrite (IN3,  LOW);
+  digitalWrite (IN4,  HIGH);
   ultraSonido();
   acelerarMotor();
-  // se llama a ñla funcion ultrasonido para saber si hay algo adelante o no 
+  // se llama a la funcion ultrasonido para saber si hay algo adelante o no 
   Serial.print(distancia);
   encoders();                                                   // se inicializan los encoders 
    //Serial.print(distancia);
-  while(distanciaEncoders > distanciaTotal){                // se haci un bucle hasta que se termina de completar la distancia total recorida
+  while(abs(distanciaEncoders) >= abs(distanciaTotal)){                // se hace un bucle hasta que se termina de completar la distancia total recorida
      encoders();                                                // se mira la distancia de los encoders 
      //ultraSonido();                                             // se mira la distancia de los objetos al frente
      
@@ -29,14 +29,14 @@ void retroceder2(){
      int difEncoders = abs(encoderRight-encoderLeft);
       if (((abs(encoderRight-encoderLeft)) > diferenciaEncoders)){           // se mira que la diferencia entre los valores medidos por los encoders no sea mayor a la establecida
           
-          if((encoderRight * -1) < (encoderLeft * -1)){                                                                           // si la diferencia es mayor se determina cual avanzo mas para poder corregir      
+          if((encoderRight * -1) < (encoderLeft * -1)){                                                             // si la diferencia es mayor se determina cual avanzo mas para poder corregir      
             Serial.println("correcion Right");                                                                      // el encoder derecho avanzo mas que el izquierdo 
             analogWrite(ENRight,velocidadReduccionRight);                                                           // se reduce la velocidad del motor derecho un determinado tiempo
             delay(tiempoCorrecion * difEncoders);
             analogWrite(ENRight,velocidadMaximaMotorRight);
           }else{
             Serial.println("correcion Left");                                                                       // el encoder izquierdo avanzo mas que el derecho 
-                analogWrite(ENLeft,velocidadReduccionLeft);                                                          // se reduce la velocidad del motor izquierdo un determinado tiempo
+                analogWrite(ENLeft,velocidadReduccionLeft);                                                         // se reduce la velocidad del motor izquierdo un determinado tiempo
                 delay(tiempoCorrecion * difEncoders);
                 analogWrite(ENLeft,velocidadMaximaMotorLeft);  
                       
